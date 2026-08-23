@@ -30,6 +30,7 @@ def trigger_review(member_id: str, db: Session = Depends(get_db)):
         decision_id=decision_id,
         audit_reference=audit_ref,
         workflow_session_id=session_id,
+        member_id=member_id,
         explanation=context.explanation,
         recommendation=result["final_recommendation"]
     )
