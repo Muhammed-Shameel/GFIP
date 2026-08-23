@@ -74,7 +74,7 @@ export function AgentWorkflowConsolePage({ memberId }: { memberId: string }) {
             {data.final_recommendation || "N/A"}
         </p>
         <p style={{marginBottom: '10px'}}><strong>Explanation:</strong> <em>{data.context.explanation || "No explanation provided."}</em></p>
-        <p style={{fontSize: '0.85rem', color: '#667386'}}><strong>Audit Reference:</strong> {data.context.audit_reference || "N/A"}</p>
+        <p style={{fontSize: '0.85rem', color: '#667386'}}><strong>Audit Reference:</strong> {data.audit_reference || "N/A"}</p>
       </section>
     </div>
   );
