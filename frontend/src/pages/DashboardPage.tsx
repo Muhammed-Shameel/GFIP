@@ -28,8 +28,8 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
 
       <section className="kpi-grid">
         <article><span>Total demo members</span><strong>{members.length}</strong></article>
-        <article><span>Intelligence status</span><strong>Not implemented</strong></article>
-        <article><span>Current phase</span><strong>Foundation</strong></article>
+        <article><span>Intelligence status</span><strong>Implemented</strong></article>
+        <article><span>Current phase</span><strong>Stage 2 Complete</strong></article>
       </section>
 
       <section id="members" className="panel">
@@ -54,12 +54,13 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
       </section>
 
       <section id="limitations" className="panel">
-        <h2>Starter Boundary</h2>
+        <h2>System Boundary & Status</h2>
         <ul>
-          <li>No agents or deterministic recommendation are completed.</li>
+          <li>Agents and deterministic recommendation logic are fully implemented.</li>
+          <li>Orchestration and audit logging are fully functional.</li>
           <li>No LangGraph or LLM is included.</li>
           <li>No medical or sensitive health intelligence is permitted.</li>
-          <li>PostgreSQL is the target; SQLite is available as a local fallback.</li>
+          <li>PostgreSQL is the target; SQLite is currently used as the development store.</li>
         </ul>
       </section>
     </>
