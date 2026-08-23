@@ -20,10 +20,24 @@ def trigger_review(member_id: str, db: Session = Depends(get_db)):
     orchestrator = OrchestrationService()
     result = orchestrator.run_workflow(context)
     
-    # 3. Store Session/Decision (Simplified for demonstration)
+    # 3. Store Session/Decision
     session = WorkflowSession(workflow_session_id=session_id, member_id=member_id, status="completed")
+    
+    # Generate audit reference and store record
+    audit_ref = str(uuid4())
+    decision = DecisionRecord(
+        audit_reference=audit_ref,
+        workflow_session_id=session_id,
+        explanation=context.explanation,
+        recommendation=result["final_recommendation"]
+    )
+    
     db.add(session)
+    db.add(decision)
     db.commit()
+    
+    # Add audit reference to result
+    result["audit_reference"] = audit_ref
     
     return result
 
