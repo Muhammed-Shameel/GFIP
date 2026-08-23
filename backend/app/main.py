@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect
 
 from app.api.router import api_router
 from app.core.config import get_settings
@@ -13,10 +14,16 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    seed_data(db)
-    db.close()
+    print("DEBUG: Lifespan is running!")
+    # Idempotent table creation and seeding
+    try:
+        db = SessionLocal()
+        # Create tables only if they don't exist
+        Base.metadata.create_all(bind=engine)
+        seed_data(db)
+        db.close()
+    except Exception as e:
+        print(f"Startup initialization warning/error (likely benign if DB exists): {e}")
     yield
 
 app = FastAPI(

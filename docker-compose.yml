@@ -1,33 +1,22 @@
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: gfip
-      POSTGRES_USER: gfip
-      POSTGRES_PASSWORD: gfip
-    ports:
-      - "5432:5432"
-    volumes:
-      - gfip_postgres:/var/lib/postgresql/data
-
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: postgresql+psycopg://gfip:gfip@db:5432/gfip
-      CORS_ORIGINS: http://localhost:5173
+      DATABASE_URL: sqlite:///./data/gfip.db
+      CORS_ORIGINS: http://localhost:8080
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    volumes:
+      - gfip_data:/app/data
+      - ./GFIP_Phase1_Sample_Data_and_Test_Scenarios/GFIP_Phase1_Sample_Data_and_Test_Scenarios:/app/data/sample_data:ro
 
   frontend:
-    build: ./frontend
-    environment:
-      VITE_API_BASE_URL: http://localhost:8000
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
     ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+      - "8080:80"
 
 volumes:
-  gfip_postgres:
+  gfip_data:

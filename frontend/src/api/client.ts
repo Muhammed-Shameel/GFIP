@@ -11,8 +11,18 @@ async function request<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function postRequest<T>(path: string): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, { method: 'POST' });
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Request failed with status ${response.status}`);
+  }
+  return response.json() as Promise<T>;
+}
+
 export const api = {
   health: () => request<{ status: string; service: string }>("/health"),
   members: () => request<MemberListResponse>("/api/v1/members"),
-  memberById: (id: string) => request<any>(`/api/v1/members/${id}`)
+  memberById: (id: string) => request<any>(`/api/v1/members/${id}`),
+  reviewMember: (id: string) => postRequest<any>(`/api/v1/reviews/member?member_id=${id}`)
 };

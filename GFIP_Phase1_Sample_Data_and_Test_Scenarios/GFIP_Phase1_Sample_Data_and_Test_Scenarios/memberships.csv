@@ -1,0 +1,7 @@
+membership_id,member_code,plan_name,start_date,end_date,status,sessions_per_week_target
+MS-001,MEM-001,Annual,2026-01-10,2027-01-09,active,3
+MS-002,MEM-002,Annual,2025-07-25,2026-07-24,active,3
+MS-003,MEM-003,Monthly,2026-06-30,2026-07-29,active,2
+MS-004,MEM-004,Annual,2025-07-20,2026-07-20,active,4
+MS-005,MEM-005,Quarterly,2026-05-01,2026-07-31,active,2
+MS-006,MEM-006,Quarterly,2026-04-01,2026-06-30,expired,2

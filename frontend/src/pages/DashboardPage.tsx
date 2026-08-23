@@ -39,13 +39,15 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
         {!loading && !error && members.length === 0 && <p>No members loaded. Run the seed script.</p>}
         <div className="member-grid">
           {members.map((member) => (
-            <article key={member.id} className="member-card" onClick={() => onMemberSelect(member.id)} style={{ cursor: 'pointer' }}>
-              <div>
-                <span>{member.member_code}</span>
-                <h3>{member.full_name}</h3>
+            <article key={member.id} className="member-card" onClick={() => onMemberSelect(member.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <span className="eyebrow" style={{fontFamily: 'monospace', color: '#173b6c', fontSize: '0.9rem', fontWeight: 'bold', background: '#eef2f6', padding: '2px 6px', borderRadius: '4px'}}>{member.member_code}</span>
+                <span className={`status-badge ${member.status === 'active' ? 'active' : ''}`}>{member.status}</span>
               </div>
-              <p>Status: {member.status}</p>
-              <p>Tags: {member.preferred_training_tags.join(", ") || "None"}</p>
+              <h3 style={{margin: 0}}>{member.full_name}</h3>
+              <p style={{margin: 0, color: '#667386', fontSize: '0.85rem'}}>
+                <strong>Tags:</strong> {member.preferred_training_tags.join(", ") || "None"}
+              </p>
             </article>
           ))}
         </div>

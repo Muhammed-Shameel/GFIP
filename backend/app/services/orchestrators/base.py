@@ -39,11 +39,15 @@ class OrchestrationService:
         # Aggregate recommendation
         final_rec = self._aggregate_recommendations(results)
         
+        # Populate explanation
+        context.explanation = f"Workflow completed with recommendation: {final_rec}. Based on agents: {', '.join(results.keys())}."
+        
         return {
             "workflow_session_id": context.workflow_session_id,
             "results": results,
             "final_recommendation": final_rec,
-            "trace_log": logs
+            "trace_log": logs,
+            "context": context.model_dump()
         }
 
     def _aggregate_recommendations(self, results: dict[str, Any]) -> str:

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export function Layout({ children }: { children: ReactNode }) {
+export function Layout({ children, onNavigate }: { children: ReactNode; onNavigate: (page: 'dashboard') => void }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -10,7 +10,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <p>Gym & Fitness Intelligence Platform</p>
         </div>
         <nav>
-          <a href="#dashboard">Dashboard</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('dashboard'); }}>Dashboard</a>
           <a href="#members">Members</a>
           <a href="#limitations">Limitations</a>
         </nav>
