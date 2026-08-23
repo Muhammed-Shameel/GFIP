@@ -1,6 +1,10 @@
 import type { MemberListResponse } from "../types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://gfip.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not defined in environment variables.");
+}
 
 async function request<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`);
