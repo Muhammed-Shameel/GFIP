@@ -25,7 +25,9 @@ def trigger_review(member_id: str, db: Session = Depends(get_db)):
     
     # Generate audit reference and store record
     audit_ref = str(uuid4())
+    decision_id = str(uuid4())
     decision = DecisionRecord(
+        decision_id=decision_id,
         audit_reference=audit_ref,
         workflow_session_id=session_id,
         explanation=context.explanation,
