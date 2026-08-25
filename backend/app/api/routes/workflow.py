@@ -88,6 +88,7 @@ def trigger_review_graph(member_id: str, db: Session = Depends(get_db)):
     graph = create_graph()
     final_state = graph.invoke(initial_state)
     
+    final_state["graph_mode"] = "stateless graph"
     return final_state
 
 @router.get("/workflows/{workflow_session_id}/trace")
