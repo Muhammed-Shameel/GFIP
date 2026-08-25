@@ -1,9 +1,12 @@
+import os
 import csv
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.models.domain import Member, Membership, AttendanceRecord, Trainer, FollowUpActivity
 
-DATA_DIR = "/app/data/sample_data"
+# Use path relative to project root
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DATA_DIR = os.path.join(BASE_DIR, "app/data/sample_data")
 
 def import_csv_data(db: Session):
     # 1. Members

@@ -11,8 +11,12 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
-        return [value.strip() for value in self.cors_origins.split(",") if value.strip()]
+        origins = [value.strip() for value in self.cors_origins.split(",") if value.strip()]
+        print(f"DEBUG: Calculated CORS origin list: {origins}")
+        return origins
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    settings = Settings()
+    print(f"DEBUG: Settings loaded: {settings.model_dump()}")
+    return settings
