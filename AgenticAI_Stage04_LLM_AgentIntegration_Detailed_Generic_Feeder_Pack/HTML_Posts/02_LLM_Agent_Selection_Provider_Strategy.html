@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>02 LLM Agent Selection Provider Strategy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --bg:#f3f6fb;--card:#ffffff;--ink:#101828;--muted:#475467;--line:#d9e2ec;
+  --navy:#0f172a;--blue:#2563eb;--indigo:#4f46e5;--green:#059669;--orange:#ea580c;--red:#dc2626;
+  --soft-blue:#eff6ff;--soft-indigo:#eef2ff;--soft-green:#ecfdf5;--soft-orange:#fff7ed;--soft-red:#fef2f2;--code:#0f172a;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:28px;background:linear-gradient(180deg,#eef4ff 0%,#f8fafc 280px);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.62}
+.page{max-width:1180px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:36px;box-shadow:0 18px 46px rgba(15,23,42,.10)}
+.hero{background:linear-gradient(135deg,#0f172a,#312e81 52%,#0f766e);color:white;border-radius:22px;padding:34px;margin-bottom:28px}
+.hero .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:13px;font-weight:800;opacity:.88}
+.hero h1{margin:8px 0 12px;font-size:34px;line-height:1.18}
+.hero p{font-size:18px;color:#dbeafe;max-width:940px}
+h2{font-size:23px;margin-top:34px;color:#0f172a;border-bottom:2px solid var(--line);padding-bottom:9px}
+h3{font-size:18px;margin-top:26px;color:#172554}
+p{margin:12px 0}.lead{font-size:18px;color:var(--muted)}
+.badge{display:inline-block;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);color:white;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:700;margin:4px 6px 0 0}
+.stagebar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:20px 0}
+.stage{border:1px solid var(--line);border-radius:14px;padding:12px;background:#f8fafc;font-size:14px}
+.stage.active{background:var(--soft-indigo);border-color:#a5b4fc;font-weight:800;color:#312e81}
+.note,.good,.warn,.danger{border-radius:14px;padding:15px 17px;margin:18px 0}
+.note{background:var(--soft-blue);border-left:6px solid var(--blue)}
+.good{background:var(--soft-green);border-left:6px solid var(--green)}
+.warn{background:var(--soft-orange);border-left:6px solid var(--orange)}
+.danger{background:var(--soft-red);border-left:6px solid var(--red)}
+table{width:100%;border-collapse:collapse;margin:18px 0 28px;font-size:15px}
+th{background:var(--navy);color:white;text-align:left;padding:12px;border:1px solid var(--navy)}
+td{padding:12px;border:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+code{background:#eef2ff;color:#1e3a8a;border:1px solid #dbeafe;padding:2px 6px;border-radius:6px}
+pre{background:var(--code);color:#e5e7eb;border-radius:14px;padding:18px;overflow-x:auto;white-space:pre-wrap;line-height:1.5;border:1px solid #1f2937}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px;margin:18px 0}
+.card{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:16px}
+.card strong{display:block;color:#172554;margin-bottom:6px}
+.checklist td:first-child{width:68px;font-weight:800;color:#172554}
+.footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+  <div class="eyebrow">Post 2</div>
+  <h1>Select LLM-Powered Agents and Provider Strategy</h1>
+  <p>This post decides which agents should use LLM, which should remain deterministic, and which free/low-cost provider or mock mode should be used.</p>
+  
+<div>
+  <span class="badge">LLM Inside Agents</span>
+  <span class="badge">Free / Low-Cost First</span>
+  <span class="badge">Structured Output</span>
+  <span class="badge">Fallback Required</span>
+</div>
+
+</div>
+
+<h2>Agent Selection Principle</h2>
+<p>
+Choose LLM where natural language understanding, summarization, qualitative reasoning or drafting helps.
+Do not use LLM for strict calculations, threshold rules or audit integrity.
+</p>
+
+<h2>LLM Candidate Selection Table</h2>
+<table>
+<thead><tr><th>Agent</th><th>Current Role</th><th>LLM Value</th><th>Risk</th><th>LLM Mode</th><th>Fallback</th></tr></thead>
+<tbody>
+<tr><td>Agent 1</td><td></td><td></td><td>Low / Medium / High</td><td>Enhance / Replace / Explain / Draft</td><td>Deterministic</td></tr>
+<tr><td>Agent 2</td><td></td><td></td><td>Low / Medium / High</td><td>Enhance / Replace / Explain / Draft</td><td>Deterministic</td></tr>
+<tr><td>Agent 3</td><td></td><td></td><td>Low / Medium / High</td><td>Enhance / Replace / Explain / Draft</td><td>Deterministic</td></tr>
+</tbody>
+</table>
+
+<h2>LLM Mode Guide</h2>
+<table>
+<thead><tr><th>Mode</th><th>Meaning</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td>Explain</td><td>LLM explains existing output.</td><td>Safe first integration.</td></tr>
+<tr><td>Enhance</td><td>LLM adds qualitative observations but protected fields remain fixed.</td><td>Good internship learning.</td></tr>
+<tr><td>Replace with validation</td><td>LLM replaces selected agent output, but schema validation and fallback are mandatory.</td><td>Advanced selected agents.</td></tr>
+<tr><td>Draft</td><td>LLM drafts support/mentor/customer note.</td><td>Human-facing workflows.</td></tr>
+</tbody>
+</table>
+
+<h2>Provider Strategy</h2>
+<table>
+<thead><tr><th>Provider Mode</th><th>Use When</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Mock LLM</td><td>No key or provider available.</td><td>Mandatory fallback for all projects.</td></tr>
+<tr><td>Ollama Local</td><td>Laptop can run local model.</td><td>Good for offline learning.</td></tr>
+<tr><td>Gemini API Free Tier</td><td>API key available and free tier suitable.</td><td>Verify current limits before use.</td></tr>
+<tr><td>Groq</td><td>Fast hosted inference available.</td><td>Verify rate limits in account.</td></tr>
+<tr><td>Hugging Face Inference Providers</td><td>Need hosted open model access.</td><td>Verify model/provider availability.</td></tr>
+</tbody>
+</table>
+
+<h2>Provider Selection Prompt</h2>
+<pre>Act as an LLM Solution Designer and Agentic AI Mentor.
+
+Using the attached feeder documents and latest Repomix, decide the LLM agent strategy.
+
+Return:
+1. Agents suitable for LLM
+2. Agents that must remain deterministic
+3. Recommended LLM mode per agent
+4. Recommended provider strategy: mock / Ollama / Gemini / Groq / Hugging Face
+5. Environment variables needed
+6. Cost/limit considerations
+7. Fallback strategy
+8. Audit fields to capture
+
+Rules:
+- Do not convert all agents blindly.
+- Do not make paid provider mandatory.
+- Prefer mock-first implementation.
+- Use one real free/low-cost provider only if feasible.
+- Keep deterministic fallback.
+</pre>
+
+<div class="footer">RealRails Agentic AI Internship | Stage 4 — LLM Agent Integration | Free/low-cost learning stage</div>
+</div>
+</body>
+</html>

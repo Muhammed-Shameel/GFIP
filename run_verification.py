@@ -7,10 +7,14 @@ def run_tests():
     
     # Ensure PYTHONPATH is set to 'backend' directory for imports
     env = os.environ.copy()
+    # Add backend directory to PYTHONPATH
     backend_path = os.path.join(os.getcwd(), "backend")
-    env["PYTHONPATH"] = backend_path
+    if "PYTHONPATH" in env:
+        env["PYTHONPATH"] = f"{backend_path}{os.pathsep}{env['PYTHONPATH']}"
+    else:
+        env["PYTHONPATH"] = backend_path
 
-    # Run pytest
+    # Run pytest on all tests in backend/tests
     # We use -v (verbose) to clearly show each test being passed
     result = subprocess.run(
         ["pytest", "backend/tests/", "-v"],
@@ -27,7 +31,6 @@ def run_tests():
 
     if result.returncode == 0:
         print("--- Result: All tests passed successfully ---")
-        print("--- Status: READY FOR STAGE 3 POST 2 ---")
     else:
         print(f"--- Result: Tests failed with exit code {result.returncode} ---")
 

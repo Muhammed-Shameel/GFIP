@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>03 LLM Node Implementation Execution Protocol</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --bg:#f3f6fb;--card:#ffffff;--ink:#101828;--muted:#475467;--line:#d9e2ec;
+  --navy:#0f172a;--blue:#2563eb;--indigo:#4f46e5;--green:#059669;--orange:#ea580c;--red:#dc2626;
+  --soft-blue:#eff6ff;--soft-indigo:#eef2ff;--soft-green:#ecfdf5;--soft-orange:#fff7ed;--soft-red:#fef2f2;--code:#0f172a;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:28px;background:linear-gradient(180deg,#eef4ff 0%,#f8fafc 280px);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.62}
+.page{max-width:1180px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:36px;box-shadow:0 18px 46px rgba(15,23,42,.10)}
+.hero{background:linear-gradient(135deg,#0f172a,#312e81 52%,#0f766e);color:white;border-radius:22px;padding:34px;margin-bottom:28px}
+.hero .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:13px;font-weight:800;opacity:.88}
+.hero h1{margin:8px 0 12px;font-size:34px;line-height:1.18}
+.hero p{font-size:18px;color:#dbeafe;max-width:940px}
+h2{font-size:23px;margin-top:34px;color:#0f172a;border-bottom:2px solid var(--line);padding-bottom:9px}
+h3{font-size:18px;margin-top:26px;color:#172554}
+p{margin:12px 0}.lead{font-size:18px;color:var(--muted)}
+.badge{display:inline-block;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);color:white;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:700;margin:4px 6px 0 0}
+.stagebar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:20px 0}
+.stage{border:1px solid var(--line);border-radius:14px;padding:12px;background:#f8fafc;font-size:14px}
+.stage.active{background:var(--soft-indigo);border-color:#a5b4fc;font-weight:800;color:#312e81}
+.note,.good,.warn,.danger{border-radius:14px;padding:15px 17px;margin:18px 0}
+.note{background:var(--soft-blue);border-left:6px solid var(--blue)}
+.good{background:var(--soft-green);border-left:6px solid var(--green)}
+.warn{background:var(--soft-orange);border-left:6px solid var(--orange)}
+.danger{background:var(--soft-red);border-left:6px solid var(--red)}
+table{width:100%;border-collapse:collapse;margin:18px 0 28px;font-size:15px}
+th{background:var(--navy);color:white;text-align:left;padding:12px;border:1px solid var(--navy)}
+td{padding:12px;border:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+code{background:#eef2ff;color:#1e3a8a;border:1px solid #dbeafe;padding:2px 6px;border-radius:6px}
+pre{background:var(--code);color:#e5e7eb;border-radius:14px;padding:18px;overflow-x:auto;white-space:pre-wrap;line-height:1.5;border:1px solid #1f2937}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px;margin:18px 0}
+.card{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:16px}
+.card strong{display:block;color:#172554;margin-bottom:6px}
+.checklist td:first-child{width:68px;font-weight:800;color:#172554}
+.footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+  <div class="eyebrow">Post 3</div>
+  <h1>LLM Node Implementation Protocol</h1>
+  <p>This post gives the master prompt and implementation rules for adding LLM-backed graph nodes with structured output and fallback.</p>
+  
+<div>
+  <span class="badge">LLM Inside Agents</span>
+  <span class="badge">Free / Low-Cost First</span>
+  <span class="badge">Structured Output</span>
+  <span class="badge">Fallback Required</span>
+</div>
+
+</div>
+
+<h2>Recommended Architecture</h2>
+<pre>LangGraph Workflow
+→ Selected LLM-backed Node
+→ Prompt Contract
+→ LLM Provider Adapter
+→ Structured JSON Output
+→ Schema Validation
+→ Fallback if Invalid
+→ Audit Trace
+→ Final Response</pre>
+
+<h2>Suggested Folder Structure</h2>
+<pre>backend/app/application/llm/
+  __init__.py
+  providers.py
+  mock_provider.py
+  prompt_templates.py
+  schemas.py
+  validators.py
+  llm_service.py
+
+backend/app/application/graphs/nodes/
+  selected_llm_agent_node.py</pre>
+
+<h2>Environment Variables</h2>
+<table>
+<thead><tr><th>Variable</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>LLM_ENABLED</code></td><td>Enable/disable LLM mode.</td></tr>
+<tr><td><code>LLM_PROVIDER</code></td><td>mock / ollama / gemini / groq / huggingface.</td></tr>
+<tr><td><code>LLM_MODEL</code></td><td>Selected model name.</td></tr>
+<tr><td><code>LLM_API_KEY</code></td><td>Hosted provider key if used. Never commit.</td></tr>
+<tr><td><code>LLM_BASE_URL</code></td><td>Local/provider base URL if required.</td></tr>
+<tr><td><code>LLM_TIMEOUT_SECONDS</code></td><td>Timeout control.</td></tr>
+<tr><td><code>LLM_MAX_TOKENS</code></td><td>Cost/output control.</td></tr>
+</tbody>
+</table>
+
+<h2>Master Implementation Prompt</h2>
+<pre>Act as an Agentic AI Architect, LangGraph Engineer, LLM Integration Mentor and RealRails Internship Mentor.
+
+We are implementing Stage 4 — LLM Agent Integration.
+
+The goal:
+Place free/low-cost or mock LLM capability inside selected LangGraph agent nodes.
+This should create a proper Agentic AI demo showing how LLM fits inside agent orchestration.
+
+Mandatory inputs:
+1. Stage 4 LLM Agent Integration Feeder ZIP
+2. Product Foundation / Product Bible
+3. Domain Guide
+4. Agentic AI Architecture Feeder
+5. Shared Context / Workflow Memory Guide
+6. Latest Repomix after Stage 3
+7. Stage 1.5 Visualization evidence
+8. Stage 2 Cloud evidence
+9. Stage 3 LangGraph evidence
+10. Deterministic API output
+11. LangGraph API output
+12. Known limitations
+13. Preferred provider or mock mode
+
+Tasks:
+1. Review current deterministic and LangGraph architecture.
+2. Select candidate agents for LLM.
+3. Keep unsuitable agents deterministic.
+4. Create LLM provider adapter with mock mode.
+5. Add one real free/low-cost provider only if feasible.
+6. Create prompt contracts for selected agents.
+7. Enforce structured JSON/schema output.
+8. Validate LLM output.
+9. Add deterministic fallback.
+10. Integrate selected LLM-backed node into LangGraph.
+11. Preserve deterministic and LangGraph endpoints.
+12. Add LLM-assisted endpoint or mode.
+13. Update Agent Workflow Console to show LLM-assisted mode, provider, validation and fallback.
+14. Compare deterministic vs LangGraph vs LLM-assisted outputs.
+15. Generate latest Repomix after implementation.
+
+Strict rules:
+- Do not build chatbot-only output.
+- Do not make paid provider mandatory.
+- Do not commit API keys.
+- Do not send full DB dump to LLM.
+- Do not remove deterministic fallback.
+- Do not remove LangGraph baseline.
+- Do not silently allow LLM to change protected fields.
+- Keep the demo learning-grade, low-cost and explainable.
+
+Output required:
+1. Architecture assessment
+2. LLM agent selection table
+3. Provider strategy
+4. Prompt contracts
+5. Structured output schemas
+6. Exact file changes
+7. Endpoint/mode details
+8. Validation and fallback logic
+9. UI/demo update
+10. Evidence checklist
+11. Completion report draft
+</pre>
+
+<div class="footer">RealRails Agentic AI Internship | Stage 4 — LLM Agent Integration | Free/low-cost learning stage</div>
+</div>
+</body>
+</html>

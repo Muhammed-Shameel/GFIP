@@ -12,29 +12,68 @@ export function MemberDetailPage({ memberId, onBack, onStartWorkflow }: { member
   }, [memberId]);
 
   if (error) return <p className="error">Error: {error}</p>;
-  if (!member) return <p>Loading…</p>;
+  if (!member) return <p>Loading member profile…</p>;
 
   return (
-    <section className="panel">
-      <h2 style={{marginTop: 0}}>{member.full_name}</h2>
-      <div className="kpi-grid" style={{gridTemplateColumns: '1fr 1fr'}}>
-        <article>
-            <span>Member Code</span>
-            <strong>{member.member_code}</strong>
-        </article>
-        <article>
-            <span>Status</span>
-            <strong className={`status-badge ${member.status === 'active' ? 'active' : ''}`}>{member.status}</strong>
-        </article>
-      </div>
-      <div style={{marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #d8e0e8'}}>
+    <div>
+      <div style={{ marginBottom: '15px' }}>
         <button 
-            onClick={onStartWorkflow} 
-            style={{background: '#173b6c', color: 'white', padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold'}}
+          onClick={onBack}
+          style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', color: '#475569', fontWeight: 'bold' }}
         >
-            Run Agentic Workflow Analysis
+          ← Back to Dashboard
         </button>
       </div>
-    </section>
+
+      <section className="panel">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div>
+            <span className="eyebrow" style={{ color: '#2563eb' }}>Member Profile</span>
+            <h2 style={{ margin: '5px 0 0 0', fontSize: '1.8rem' }}>{member.full_name}</h2>
+          </div>
+          <span className={`status-badge ${member.status === 'active' ? 'active' : ''}`} style={{ fontSize: '0.9rem', padding: '4px 12px' }}>
+            {member.status}
+          </span>
+        </div>
+
+        <div className="kpi-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '20px' }}>
+          <article>
+            <span>Member Code</span>
+            <strong style={{ fontFamily: 'monospace', color: '#1e293b' }}>{member.member_code}</strong>
+          </article>
+          <article>
+            <span>Email</span>
+            <strong style={{ fontSize: '1rem', color: '#334155' }}>{member.email || "N/A"}</strong>
+          </article>
+          <article>
+            <span>Joined Date</span>
+            <strong style={{ fontSize: '1rem', color: '#334155' }}>{member.joined_on ? new Date(member.joined_on).toLocaleDateString() : "N/A"}</strong>
+          </article>
+        </div>
+
+        <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
+          <h4 style={{ margin: '0 0 8px 0', color: '#334155' }}>Preferred Training Tags</h4>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {(member.preferred_training_tags || []).map((tag: string, i: number) => (
+              <span key={i} style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                {tag}
+              </span>
+            ))}
+            {(!member.preferred_training_tags || member.preferred_training_tags.length === 0) && (
+              <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>No tags specified</span>
+            )}
+          </div>
+        </div>
+
+        <div style={{ paddingTop: '15px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end' }}>
+          <button 
+            onClick={onStartWorkflow} 
+            style={{ background: '#2563eb', color: 'white', padding: '12px 28px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', boxShadow: '0 4px 12px rgba(37,99,235,0.2)' }}
+          >
+            Run Agentic Workflow Console →
+          </button>
+        </div>
+      </section>
+    </div>
   );
 }
