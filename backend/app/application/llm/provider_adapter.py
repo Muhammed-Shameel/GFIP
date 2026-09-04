@@ -37,21 +37,28 @@ class LLMProviderAdapter:
         if self.provider_name == "gemini":
             api_key = os.getenv("LLM_API_KEY") or os.getenv("GEMINI_API_KEY")
             if api_key:
-                try:
-                    import google.generativeai as genai
-                    genai.configure(api_key=api_key)
-                    model_id = self.model_name if self.model_name != "mock-agentic-v1" else "gemini-2.5-flash-lite"
-                    model = genai.GenerativeModel(model_id)
-                    response = model.generate_content(prompt)
-                    raw_text = response.text
-                    # Clean potential markdown formatting
-                    raw_text = raw_text.replace("```json", "").replace("```", "").strip()
-                    return raw_text, "gemini", model_id
-                except Exception as e:
-                    logger.warning(f"Gemini provider call failed ({e}). Falling back to mock provider.")
-                    # Fallback to mock provider
-                    raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
-                    return raw_text, "mock_fallback", "mock-agentic-v1"
+                import google.generativeai as genai
+                genai.configure(api_key=api_key)
+                
+                # Candidate list of active Gemini models
+                primary_model = self.model_name if self.model_name not in ("mock-agentic-v1", "gemini-1.5-flash") else "gemini-2.5-flash-lite"
+                candidate_models = [primary_model, "gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-3.5-flash-lite"]
+                
+                for candidate in candidate_models:
+                    try:
+                        model = genai.GenerativeModel(candidate)
+                        response = model.generate_content(prompt)
+                        raw_text = response.text
+                        raw_text = raw_text.replace("```json", "").replace("```", "").strip()
+                        return raw_text, "gemini", candidate
+                    except Exception as e:
+                        logger.warning(f"Gemini model '{candidate}' call failed: {e}")
+                        continue
+
+                logger.warning("All Gemini candidate models failed. Falling back to mock provider.")
+                raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
+                return raw_text, "mock_fallback", "mock-agentic-v1"
+
 
         # Default or fallback provider: mock
         raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
