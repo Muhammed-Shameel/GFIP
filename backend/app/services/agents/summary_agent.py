@@ -13,7 +13,7 @@ class SummaryAgent:
         self.api_key = os.getenv("GEMINI_API_KEY")
         if self.api_key and genai is not None:
             genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel("gemini-2.5-flash-lite") # Using flash for speed/cost
+            self.model = genai.GenerativeModel("gemini-3.5-flash-lite") # Using flash for speed/cost
         else:
             self.model = None
 

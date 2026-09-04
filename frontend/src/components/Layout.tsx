@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
-  activeSection: 'dashboard' | 'members' | 'limitations' | 'other';
-  onNavigate: (section: 'dashboard' | 'members' | 'limitations') => void;
+  activeSection: 'dashboard' | 'showcase' | 'members' | 'limitations' | 'other';
+  onNavigate: (section: 'dashboard' | 'showcase' | 'members' | 'limitations') => void;
 }
 
 export function Layout({ children, activeSection, onNavigate }: LayoutProps) {
@@ -13,20 +13,27 @@ export function Layout({ children, activeSection, onNavigate }: LayoutProps) {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
             <span style={{ background: '#2563eb', color: '#ffffff', fontSize: '0.65rem', padding: '3px 8px', borderRadius: '12px', fontWeight: '700', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              STAGE 4 COMPLETED
+              INFOCREON INTERNSHIP
             </span>
           </div>
           <h1 style={{ cursor: 'pointer' }} onClick={() => onNavigate('dashboard')}>GFIP</h1>
           <p style={{ color: '#94a3b8', fontSize: '0.825rem', margin: '4px 0 0 0', fontWeight: '400' }}>Gym Member Intelligence</p>
         </div>
 
-        <nav style={{ marginTop: '36px' }}>
+        <nav style={{ marginTop: '32px' }}>
           <a 
             href="#" 
             className={activeSection === 'dashboard' ? 'nav-item active' : 'nav-item'} 
             onClick={(e) => { e.preventDefault(); onNavigate('dashboard'); }}
           >
             Dashboard
+          </a>
+          <a 
+            href="/internship-showcase" 
+            className={activeSection === 'showcase' ? 'nav-item active' : 'nav-item'} 
+            onClick={(e) => { e.preventDefault(); onNavigate('showcase'); }}
+          >
+            Internship Showcase
           </a>
           <a 
             href="#members" 
@@ -45,7 +52,7 @@ export function Layout({ children, activeSection, onNavigate }: LayoutProps) {
         </nav>
 
         <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', fontSize: '0.75rem', color: '#64748b' }}>
-          RealRails Agentic AI MVP
+          Infocreon Agentic AI Showcase
         </div>
       </aside>
 

@@ -41,8 +41,8 @@ class LLMProviderAdapter:
                 genai.configure(api_key=api_key)
                 
                 # Candidate list of active Gemini models
-                primary_model = self.model_name if self.model_name not in ("mock-agentic-v1", "gemini-1.5-flash") else "gemini-2.5-flash-lite"
-                candidate_models = [primary_model, "gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-3.5-flash-lite"]
+                primary_model = self.model_name if self.model_name not in ("mock-agentic-v1", "gemini-1.5-flash") else "gemini-3.5-flash-lite"
+                candidate_models = [primary_model, "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.5-flash-lite"]
                 
                 for candidate in candidate_models:
                     try:
