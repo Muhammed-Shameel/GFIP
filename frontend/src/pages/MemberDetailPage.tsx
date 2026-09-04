@@ -19,9 +19,9 @@ export function MemberDetailPage({ memberId, onBack, onStartWorkflow }: { member
       <div style={{ marginBottom: '15px' }}>
         <button 
           onClick={onBack}
-          style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', color: '#475569', fontWeight: 'bold' }}
+          style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', color: '#475569', fontWeight: '600', fontSize: '0.85rem' }}
         >
-          ← Back to Dashboard
+          Back to Dashboard
         </button>
       </div>
 
@@ -29,9 +29,9 @@ export function MemberDetailPage({ memberId, onBack, onStartWorkflow }: { member
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
             <span className="eyebrow" style={{ color: '#2563eb' }}>Member Profile</span>
-            <h2 style={{ margin: '5px 0 0 0', fontSize: '1.8rem' }}>{member.full_name}</h2>
+            <h2 style={{ margin: '5px 0 0 0', fontSize: '1.6rem' }}>{member.full_name}</h2>
           </div>
-          <span className={`status-badge ${member.status === 'active' ? 'active' : ''}`} style={{ fontSize: '0.9rem', padding: '4px 12px' }}>
+          <span className={`status-badge ${member.status === 'active' ? 'active' : ''}`} style={{ fontSize: '0.85rem', padding: '4px 12px' }}>
             {member.status}
           </span>
         </div>
@@ -52,10 +52,10 @@ export function MemberDetailPage({ memberId, onBack, onStartWorkflow }: { member
         </div>
 
         <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
-          <h4 style={{ margin: '0 0 8px 0', color: '#334155' }}>Preferred Training Tags</h4>
+          <h4 style={{ margin: '0 0 8px 0', color: '#334155', fontSize: '0.9rem' }}>Preferred Training Tags</h4>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {(member.preferred_training_tags || []).map((tag: string, i: number) => (
-              <span key={i} style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold' }}>
+              <span key={i} style={{ background: '#e0f2fe', color: '#0369a1', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: '600' }}>
                 {tag}
               </span>
             ))}
@@ -68,9 +68,9 @@ export function MemberDetailPage({ memberId, onBack, onStartWorkflow }: { member
         <div style={{ paddingTop: '15px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end' }}>
           <button 
             onClick={onStartWorkflow} 
-            style={{ background: '#2563eb', color: 'white', padding: '12px 28px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', boxShadow: '0 4px 12px rgba(37,99,235,0.2)' }}
+            style={{ background: '#2563eb', color: 'white', padding: '10px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '0.9rem' }}
           >
-            Run Agentic Workflow Console →
+            Run Agentic Workflow Console
           </button>
         </div>
       </section>
