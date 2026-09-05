@@ -9,14 +9,14 @@ function RouteInfo({ data }: { data: any }) {
   return (
     <section className="panel" style={{ background: '#f8f9fa', border: '1px solid #dee2e6' }}>
       <h2>Conditional Routing</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div><strong>Selected Route:</strong> <span className="status-badge">{data.selected_route}</span></div>
         <div><strong>Route Reason:</strong> {data.route_reason}</div>
-        <div style={{ gridColumn: 'span 2' }}>
+        <div>
             <strong>Executed Path:</strong> {data.executed_path ? data.executed_path.join(' -> ') : "N/A"}
         </div>
         {data.skipped_agents && data.skipped_agents.length > 0 && (
-          <div style={{ gridColumn: 'span 2' }}>
+          <div>
             <strong>Skipped Agents:</strong>
             <ul>
               {data.skipped_agents.map((sa: any, i: number) => (
