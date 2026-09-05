@@ -34,9 +34,13 @@ class LLMProviderAdapter:
         if not self.enabled:
             raise ValueError("LLM_ENABLED is set to false")
 
-        # Prioritize Gemini if API key is available
+        if self.provider_name == "mock":
+            raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
+            return raw_text, "mock", self.model_name
+
+        # Use Gemini only when explicitly selected.
         api_key = os.getenv("LLM_API_KEY") or os.getenv("GEMINI_API_KEY")
-        if api_key or self.provider_name == "gemini":
+        if self.provider_name == "gemini":
             try:
                 import google.generativeai as genai
                 genai.configure(api_key=api_key)

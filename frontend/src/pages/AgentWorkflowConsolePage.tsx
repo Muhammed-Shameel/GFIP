@@ -100,6 +100,13 @@ export function AgentWorkflowConsolePage({ memberId }: { memberId: string }) {
   const isGraphMode = mode === "langgraph" || mode === "llm_assisted";
   const traceLog = (isGraphMode ? data.agent_outputs : data.trace_log) || [];
   const context = (isGraphMode ? data.shared_context : data.context) || {};
+  const validationPassed = data.llm_validation_status === "passed" && !data.fallback_used && !data.protected_fields_changed;
+  const confidenceLabel = mode === "llm_assisted"
+    ? (validationPassed ? "High Confidence" : "Needs Review")
+    : "Rule-Based Decision";
+  const confidenceClassName = validationPassed || mode !== "llm_assisted"
+    ? "confidence-badge"
+    : "confidence-badge review";
 
   return (
     <div className="workflow-console">
@@ -179,7 +186,7 @@ export function AgentWorkflowConsolePage({ memberId }: { memberId: string }) {
       )}
 
       <section className="insight-card" style={{ marginTop: '15px' }}>
-        <span className="confidence-badge">High Confidence</span>
+        <span className={confidenceClassName}>{confidenceLabel}</span>
         <h2 style={{ fontSize: '1.2rem', margin: '0 0 8px 0', color: '#0369a1' }}>Final Decision Support</h2>
         <p style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '12px', color: '#0f172a' }}>
             {data.final_recommendation || "N/A"}

@@ -21,7 +21,7 @@ class OrchestrationService:
         results = {}
         logs = []
         
-        for agent in self.agents:
+        for agent in self._select_agents(context):
             start_time = datetime.utcnow()
             agent_result = agent.run(context)
             end_time = datetime.utcnow()
@@ -49,6 +49,21 @@ class OrchestrationService:
             "trace_log": logs,
             "context": context.model_dump()
         }
+
+    def _select_agents(self, context: SharedWorkflowContext):
+        """Apply the same routing intent as the LangGraph workflow."""
+        attendance_agent = self.agents[0]
+        attendance_result = attendance_agent.run(context)
+
+        if attendance_result["assessment"]["aggregate_score"] >= 50:
+            return [self.agents[0], self.agents[3]]
+
+        engagement_agent = self.agents[1]
+        engagement_result = engagement_agent.run(context)
+        if engagement_result["assessment"]["aggregate_score"] > 50:
+            return [self.agents[0], self.agents[1], self.agents[3]]
+
+        return self.agents
 
     def _aggregate_recommendations(self, results: dict[str, Any]) -> str:
         """Deterministic aggregation rule."""

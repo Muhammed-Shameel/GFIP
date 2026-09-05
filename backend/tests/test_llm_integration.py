@@ -88,6 +88,83 @@ def test_validator_success():
     assert val_res.status == "passed"
     assert schema_obj.protected_fields_changed is False
 
+def test_mock_provider_zero_attendance_uses_low_attendance_evidence():
+    """Zero recent check-ins must not be summarized as regular engagement."""
+    provider = MockLLMProvider()
+    safe_ctx = {
+        "selected_route": "standard",
+        "attendance_metrics": {
+            "checkins_last_30_days": 0,
+            "days_since_last_checkin": 45,
+            "is_dormant": True,
+        },
+        "engagement_risk": {"risk_level": "low"},
+        "trainer_assignment": {"has_active_trainer": True},
+    }
+
+    raw_output = provider.generate("prompt", safe_ctx, "Maintain current engagement")
+    parsed = json.loads(raw_output)
+    combined_text = " ".join([parsed["summary"], *parsed["observations"]]).lower()
+
+    assert "regular facility visits" not in combined_text
+    assert "positive engagement indicators" not in combined_text
+    assert "no check-ins" in combined_text or "attendance is low" in combined_text
+    assert parsed["confidence"] < 0.9
+
+def test_validator_rejects_zero_attendance_positive_engagement_contradiction():
+    """Business validation should reject explanations that contradict attendance evidence."""
+    contradictory_json = json.dumps({
+        "agent_name": "ExplanationSummaryService",
+        "mode": "llm_assisted",
+        "summary": "Member maintains regular facility visits with positive engagement indicators.",
+        "observations": ["Consistent workout schedule maintained."],
+        "recommendation": "Maintain current engagement",
+        "confidence": 0.95,
+        "risks": [],
+        "missing_information": [],
+        "protected_fields_changed": False,
+        "should_fallback": False
+    })
+    safe_ctx = {
+        "selected_route": "standard",
+        "attendance_metrics": {"checkins_last_30_days": 0, "days_since_last_checkin": 35},
+        "trainer_assignment": {"has_active_trainer": True},
+    }
+
+    val_res, _ = LLMOutputValidator.validate(contradictory_json, safe_ctx, "Maintain current engagement")
+
+    assert val_res.is_valid is False
+    assert any("zero recent attendance" in error for error in val_res.errors)
+
+def test_validator_requires_missing_trainer_explanation():
+    """Assign-new-trainer recommendations must explain the trainer assignment evidence."""
+    missing_trainer_json = json.dumps({
+        "agent_name": "ExplanationSummaryService",
+        "mode": "llm_assisted",
+        "summary": "Member attendance is acceptable and standard monitoring can continue.",
+        "observations": ["Recent check-ins support continued engagement."],
+        "recommendation": "Maintain current engagement | Assign new trainer",
+        "confidence": 0.9,
+        "risks": [],
+        "missing_information": [],
+        "protected_fields_changed": False,
+        "should_fallback": False
+    })
+    safe_ctx = {
+        "selected_route": "standard",
+        "attendance_metrics": {"checkins_last_30_days": 6, "days_since_last_checkin": 3},
+        "trainer_assignment": {"has_active_trainer": False},
+    }
+
+    val_res, _ = LLMOutputValidator.validate(
+        missing_trainer_json,
+        safe_ctx,
+        "Maintain current engagement | Assign new trainer",
+    )
+
+    assert val_res.is_valid is False
+    assert any("trainer assignment" in error for error in val_res.errors)
+
 def test_validator_protected_field_tampering():
     """Verify validator rejects output if protected fields are tampered."""
     tampered_json = json.dumps({
@@ -179,4 +256,3 @@ def test_llm_adapter_gemini_failure_fallback():
                 assert provider == "mock_fallback"
                 assert raw_text == "mock_output"
                 assert mock_gen.called
-

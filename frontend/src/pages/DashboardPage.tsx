@@ -17,12 +17,11 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
   return (
     <>
       <section id="dashboard" className="hero-card">
-        <p className="eyebrow" style={{ color: '#0056b3', letterSpacing: '0.1em' }}>Stage 4 — LLM Agent Integration Completed</p>
-        <h2>Gym Fitness Member Engagement & Intervention Platform (GFIP)</h2>
+        <p className="eyebrow" style={{ color: '#0056b3', letterSpacing: '0.08em' }}>Gym Member Engagement Intelligence</p>
+        <h2>Member Retention & Follow-up Dashboard</h2>
         <p>
-          Operational member engagement intelligence featuring deterministic rule processing,
-          LangGraph conditional workflow orchestration, and safe LLM-backed summary generation
-          with schema validation and deterministic fallback.
+          Track member engagement, spot retention risks, and trigger staff-ready follow-up guidance
+          using rules, workflow routing, and validated AI summaries.
         </p>
       </section>
 
@@ -33,11 +32,11 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
         </article>
         <article>
           <span>Intelligence Status</span>
-          <strong style={{ color: '#28a745', fontSize: '1.2rem' }}>Active (Rules + Graph + LLM)</strong>
+          <strong style={{ color: '#15803d', fontSize: '1.2rem' }}>Active</strong>
         </article>
         <article>
-          <span>Current Phase</span>
-          <strong style={{ color: '#0056b3', fontSize: '1.2rem' }}>Stage 4 Completed</strong>
+          <span>Engine</span>
+          <strong style={{ color: '#0056b3', fontSize: '1.2rem' }}>Rules + Graph + AI Summary</strong>
         </article>
       </section>
 
@@ -66,13 +65,13 @@ export function DashboardPage({ onMemberSelect }: { onMemberSelect: (id: string)
       </section>
 
       <section id="limitations" className="panel">
-        <h2>System Boundary & Status (Stage 4)</h2>
+        <h2>System Status</h2>
         <ul style={{ lineHeight: '1.8', color: '#334155' }}>
-          <li><strong>Deterministic Rules & Context:</strong> Fully operational across attendance, risk scoring, and trainer allocation.</li>
-          <li><strong>LangGraph Workflow:</strong> Stateful/stateless graph routing active with dormant, high-risk, and standard paths.</li>
-          <li><strong>LLM Agent Integration:</strong> `ExplanationSummaryService` powered by LLM adapter (Mock & Gemini supported) with Pydantic schema validation.</li>
-          <li><strong>Deterministic Fallback:</strong> Reverts to deterministic output on provider timeout, API error, or schema invalidity.</li>
-          <li><strong>Protected Field Enforcer:</strong> Decision scores, routes, and audit references remain protected against LLM modification.</li>
+          <li><strong>Attendance Review:</strong> Flags low or missing recent visits for staff attention.</li>
+          <li><strong>Retention Routing:</strong> Routes members through dormant, high-risk, and standard workflows.</li>
+          <li><strong>Trainer Allocation:</strong> Separates missing trainer assignments from attendance follow-up decisions.</li>
+          <li><strong>AI Summary Validation:</strong> Summaries are checked against business evidence before they are trusted.</li>
+          <li><strong>Audit Protection:</strong> Decision routes, scores, and audit references remain protected from AI-generated text.</li>
         </ul>
       </section>
     </>

@@ -23,7 +23,10 @@ def attendance_node(state: GFIPGraphState) -> GFIPGraphState:
     result = attendance_agent.run(ctx)
     state["agent_outputs"].append({"agent": "AttendanceAgent", "output": result})
     # Update flags based on attendance
-    state["route_flags"]["is_dormant"] = result.get("is_dormant", False)
+    state["route_flags"] = {
+        **state["route_flags"],
+        "is_dormant": result.get("assessment", {}).get("aggregate_score", 0) >= 50,
+    }
     return state
 
 def engagement_risk_node(state: GFIPGraphState) -> GFIPGraphState:
@@ -31,7 +34,10 @@ def engagement_risk_node(state: GFIPGraphState) -> GFIPGraphState:
     ctx = SharedWorkflowContext(**state["shared_context"])
     result = engagement_agent.run(ctx)
     state["agent_outputs"].append({"agent": "EngagementRiskAgent", "output": result})
-    state["route_flags"]["is_high_risk"] = result.get("risk_level") == "high"
+    state["route_flags"] = {
+        **state["route_flags"],
+        "is_high_risk": result.get("assessment", {}).get("aggregate_score", 0) > 50,
+    }
     return state
 
 def trainer_allocation_node(state: GFIPGraphState) -> GFIPGraphState:
