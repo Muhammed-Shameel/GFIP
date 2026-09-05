@@ -34,15 +34,15 @@ class LLMProviderAdapter:
         if not self.enabled:
             raise ValueError("LLM_ENABLED is set to false")
 
-        if self.provider_name == "gemini":
-            api_key = os.getenv("LLM_API_KEY") or os.getenv("GEMINI_API_KEY")
-            if api_key:
+        # Prioritize Gemini if API key is available
+        api_key = os.getenv("LLM_API_KEY") or os.getenv("GEMINI_API_KEY")
+        if api_key or self.provider_name == "gemini":
+            try:
                 import google.generativeai as genai
                 genai.configure(api_key=api_key)
                 
                 # Candidate list of active Gemini models
-                primary_model = self.model_name if self.model_name not in ("mock-agentic-v1", "gemini-1.5-flash") else "gemini-3.5-flash-lite"
-                candidate_models = [primary_model, "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.5-flash-lite"]
+                candidate_models = ["gemini-3.5-flash-lite", "gemini-3.6-flash"]
                 
                 for candidate in candidate_models:
                     try:
@@ -54,12 +54,10 @@ class LLMProviderAdapter:
                     except Exception as e:
                         logger.warning(f"Gemini model '{candidate}' call failed: {e}")
                         continue
+            except Exception as e:
+                logger.warning(f"Gemini configuration failed: {e}")
 
-                logger.warning("All Gemini candidate models failed. Falling back to mock provider.")
-                raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
-                return raw_text, "mock_fallback", "mock-agentic-v1"
-
-
-        # Default or fallback provider: mock
+        # Fallback to mock
+        logger.warning("Gemini integration failed or skipped. Falling back to mock provider.")
         raw_text = self.mock_provider.generate(prompt, safe_context, recommendation)
-        return raw_text, "mock", self.model_name
+        return raw_text, "mock_fallback", self.model_name

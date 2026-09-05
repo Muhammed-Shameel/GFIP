@@ -163,3 +163,20 @@ def test_endpoint_parity_deterministic_vs_graph_vs_llm():
     assert data_llm["llm_provider"] in ("mock", "gemini", "mock_fallback")
     assert data_llm["protected_fields_changed"] is False
 
+def test_llm_adapter_gemini_failure_fallback():
+    """Verify LLM Adapter falls back to mock provider if Gemini fails."""
+    import os
+    with patch.dict(os.environ, {"LLM_PROVIDER": "gemini", "GEMINI_API_KEY": "fake_key"}):
+        adapter = LLMProviderAdapter()
+        
+        with patch.object(adapter.mock_provider, 'generate', return_value="mock_output") as mock_gen:
+            # We mock the import of google.generativeai and make it fail
+            mock_genai = MagicMock()
+            mock_genai.GenerativeModel.return_value.generate_content.side_effect = Exception("Gemini failure")
+            with patch.dict('sys.modules', {'google.generativeai': mock_genai}):
+                raw_text, provider, model = adapter.generate("prompt", {}, "Rec")
+                
+                assert provider == "mock_fallback"
+                assert raw_text == "mock_output"
+                assert mock_gen.called
+
